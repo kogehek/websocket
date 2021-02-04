@@ -1,0 +1,62 @@
+<!doctype html>
+<div>
+  <input id="message_input" type="text" name="message" maxlength="1000" />
+  <input type="button" onclick="send()" value="Send Message">
+</div>
+<p></p>
+<div>
+  <input type="button" onclick="getUID()" value="Get UID Client">
+</div>
+<p></p>
+</div>
+<div id="self_messages">Self</div>
+<div id="server_messages">Server</div>
+
+<script>
+  let url = "ws://localhost:8080/ws";
+
+  let socket = new WebSocket(url);
+
+  socket.onmessage = function (event) {
+    let node = document.getElementById("server_messages");
+    let selfMassage = document.createElement("div");
+    selfMassage.innerHTML = event.data;
+    node.insertBefore(selfMassage, node.childNodes[0]);
+  };
+
+  function getUID() {
+    socket.send(JSON.stringify({
+      Method:"getName", 
+      Body: "/name"
+    }));
+  }
+
+  function send() {
+    let message = document.getElementById("message_input").value;
+    let node = document.getElementById("self_messages");
+    let selfMassage = document.createElement("div");
+    selfMassage.innerHTML = message;
+    node.insertBefore(selfMassage, node.childNodes[0]);
+    document.getElementById("message_input").value = "";
+    socket.send(JSON.stringify({
+      Method:"broadcast", 
+      Body: message
+    }));
+  }
+</script>
+
+<style>
+  #self_messages {
+    padding: 5px;
+    background-color: rgb(208, 216, 208);
+    width: 48%;
+    float: left;
+  }
+
+  #server_messages {
+    padding: 5px;
+    background-color: rgb(218, 186, 186);
+    width: 48%;
+    float: right;
+  }
+</style>
