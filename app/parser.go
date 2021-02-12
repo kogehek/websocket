@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 )
 
@@ -11,6 +12,8 @@ var Methods = map[string]interface{}{
 }
 
 func getName(c *Client, request Request) {
+	// c.user = model.NewUser()
+	fmt.Println(c)
 	c.hub.self <- newResponse(c, c.id)
 }
 

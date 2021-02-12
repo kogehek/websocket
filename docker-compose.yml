@@ -1,0 +1,15 @@
+version: '3.6'
+
+services:
+    postgres:
+        volumes:
+            - ./postgres:/docker-entrypoint-initdb.d
+        image: postgres
+        environment:
+            - POSTGRES_USER=root
+            - POSTGRES_PASSWORD=root
+            - POSTGRES_DB=websocket
+        ports:
+            - "5432:5432"
+        restart: always
+    

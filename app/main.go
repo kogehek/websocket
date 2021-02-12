@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"net/http"
-	"websocket/auth"
 
 	"github.com/gorilla/websocket"
 )
@@ -32,11 +31,11 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	// auth.Time(auth.ExampleNewWithClaims_standardClaims())
-	auth.Time("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYXIiLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOiIxNTE2MjM5MDIyIiwiZXhwIjoxNjEyNDQ1NzU1LCJpc3MiOiJ0ZXN0In0.5uj1kF_DSgWsdqGmZk-iwzzSwxskfQMMATN_xGhmDZo")
-	// hub := newHub()
-	// go hub.run()
-	// http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-	// 	serveWs(hub, w, r)
-	// })
-	// log.Fatal(http.ListenAndServe(":8080", nil))
+	// auth.Time("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYXIiLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOiIxNTE2MjM5MDIyIiwiZXhwIjoxNjEyNDQ1NzU1LCJpc3MiOiJ0ZXN0In0.5uj1kF_DSgWsdqGmZk-iwzzSwxskfQMMATN_xGhmDZo")
+	hub := newHub()
+	go hub.run()
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(hub, w, r)
+	})
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
