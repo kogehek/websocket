@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
-	"websocket/model"
+	"websocket/store"
 
 	"github.com/gorilla/websocket"
 )
@@ -22,11 +22,21 @@ var seededRand *rand.Rand = rand.New(
 	rand.NewSource(time.Now().UnixNano()))
 
 type Client struct {
-	id   string
-	hub  *Hub
-	conn *websocket.Conn
-	send chan []byte
-	user *model.User
+	id    string
+	hub   *Hub
+	conn  *websocket.Conn
+	send  chan []byte
+	store *store.Store
+}
+
+func newClient(hub *Hub, conn *websocket.Conn, send chan []byte, store *store.Store) *Client {
+	return &Client{
+		id:    StringWithCharset(5, charset),
+		hub:   hub,
+		conn:  conn,
+		send:  send,
+		store: store,
+	}
 }
 
 func StringWithCharset(length int, charset string) string {
@@ -35,15 +45,6 @@ func StringWithCharset(length int, charset string) string {
 		b[i] = charset[seededRand.Intn(len(charset))]
 	}
 	return string(b)
-}
-
-func newClient(hub *Hub, conn *websocket.Conn, send chan []byte) *Client {
-	return &Client{
-		id:   StringWithCharset(5, charset),
-		hub:  hub,
-		conn: conn,
-		send: send,
-	}
 }
 
 func (c *Client) read() {
@@ -59,6 +60,7 @@ func (c *Client) read() {
 			break
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+		newMessage(message, c)
 		ParseJSON(message, c)
 	}
 }

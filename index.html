@@ -6,6 +6,7 @@
 <p></p>
 <div>
   <input type="button" onclick="getUID()" value="Get UID Client">
+  <input type="button" onclick="auth()" value="AUTH">
 </div>
 <p></p>
 </div>
@@ -23,6 +24,13 @@
     selfMassage.innerHTML = event.data;
     node.insertBefore(selfMassage, node.childNodes[0]);
   };
+
+  function auth() {
+    socket.send(JSON.stringify({
+      Method:"auth", 
+      Body: "/dasdasdasd"
+    }));
+  }
 
   function getUID() {
     socket.send(JSON.stringify({

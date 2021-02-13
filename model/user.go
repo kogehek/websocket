@@ -1,18 +1,24 @@
 package model
 
-import "websocket/command"
+import (
+	"websocket/valid"
+)
 
 type User struct {
-	Email    string
-	password string
-	tokenJWT string
-	command  command.Command
+	ID       int
+	Email    string `validate:"required,gvna"`
+	Password string `validate:"gte=5,lte=50"`
+	TokenJWT string
 }
 
-func Authentication(Email string, Password string) *User {
-	return &User{
-		Email:    "13123",
-		password: "123123",
-		tokenJWT: "weeqewq",
+func NewUser(Email string, encrypted_password string) (*User, error) {
+	user := &User{
+		Email:    Email,
+		Password: encrypted_password,
 	}
+	err := valid.Model(user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

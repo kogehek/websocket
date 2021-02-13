@@ -2,23 +2,32 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"reflect"
+	"websocket/model"
 )
 
 var Methods = map[string]interface{}{
 	"getName":   getName,
 	"broadcast": broadcast,
+	"auth":      auth,
 }
 
 func getName(c *Client, request Request) {
-	// c.user = model.NewUser()
-	fmt.Println(c)
 	c.hub.self <- newResponse(c, c.id)
 }
 
 func broadcast(c *Client, request Request) {
 	c.hub.broadcast <- newResponse(c, request.Body)
+}
+
+func auth(c *Client, request Request) {
+	user, err := model.NewUser("sadasdssad.dd", "3")
+	if err != nil {
+		c.hub.self <- newResponse(c, err.Error())
+		return
+	}
+	c.store.UserRepository.Create(user)
+	c.hub.self <- newResponse(c, "USER CREATE")
 }
 
 func call(funcName string, params ...interface{}) (result interface{}, err error) {

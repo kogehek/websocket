@@ -30,7 +30,7 @@ func (h *Hub) run() {
 			}
 		case message := <-h.self:
 			select {
-			case message.client.send <- []byte(message.client.id):
+			case message.client.send <- []byte(message.data):
 			default:
 				close(message.client.send)
 				delete(h.clients, message.client)
