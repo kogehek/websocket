@@ -3,7 +3,6 @@ package store
 import (
 	"database/sql"
 	"fmt"
-	"websocket/repository"
 
 	_ "github.com/lib/pq"
 )
@@ -11,7 +10,7 @@ import (
 // Store ...
 type Store struct {
 	DB             *sql.DB
-	UserRepository *repository.UserRepository
+	UserRepository *UserRepository
 }
 
 // New create store
@@ -22,7 +21,7 @@ func New(dataBaseURL string) *Store {
 	}
 	return &Store{
 		DB:             db,
-		UserRepository: repository.NewUserRepository(db),
+		UserRepository: userRepository(db),
 	}
 }
 

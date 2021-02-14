@@ -1,0 +1,34 @@
+.top_toole {
+    width: 100%;
+    height: 50px;
+    background-color: blanchedalmond;
+}
+
+.connect_block {
+    height: calc(100vh - 50px);
+    background-color: rgb(204, 206, 204);
+}
+.commands {
+    float: left;
+    /* background-color: #31c96d; */
+    width: 50%;
+    height: 100%;
+}
+
+.block_messages {
+    border-right: rgb(65, 65, 65) 2px solid;
+    float: left;
+    /* background-color: #31c96d; */
+    width: calc(50% - 2px);
+    height: 100%;
+}
+
+.string_messages {
+    padding: 5px;
+    border-bottom: 1px #afafaf solid;
+}
+
+.command_block {
+    padding: 5px;
+    border-bottom: 1px #afafaf solid;
+}

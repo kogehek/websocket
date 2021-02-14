@@ -1,0 +1,50 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>The HTML5 Herald</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <link rel="stylesheet" href="styles.css?v=1.0">
+  <link rel="stylesheet" href="normalize.css?v=1.0">
+
+</head>
+
+<body>
+  <div class="main">
+    <div class="top_toole">
+      
+    </div>
+    <div class="connect_block">
+      <div class="block_messages">
+        <div id="server_messages"></div>
+      </div>
+      <div class="commands">
+        <div class="command_block">
+          <input id="message_input" type="text" name="message" maxlength="1000" />
+          <input type="button" onclick="broadcast()" value="Send Message">
+        </div>
+        <div class="command_block">
+          <button  onclick="getUID()">GET UID</button>
+        </div>
+        <div class="command_block">
+          <span>email</span>
+          <input id="email_input" type="text" maxlength="350">
+          <p></p>
+          <span>password</span>
+          <input id="password_input" type="text" maxlength="50">
+          <p></p>
+          <button onclick="registration()">Registration</button>
+          <!-- <button>Sign up</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  <script src="script.js"></script>
+</body>
+</html>

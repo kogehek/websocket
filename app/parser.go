@@ -1,15 +1,18 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
+	"log"
 	"reflect"
 	"websocket/model"
 )
 
 var Methods = map[string]interface{}{
-	"getName":   getName,
-	"broadcast": broadcast,
-	"auth":      auth,
+	"getName":      getName,
+	"broadcast":    broadcast,
+	"registration": registration,
 }
 
 func getName(c *Client, request Request) {
@@ -17,16 +20,22 @@ func getName(c *Client, request Request) {
 }
 
 func broadcast(c *Client, request Request) {
-	c.hub.broadcast <- newResponse(c, request.Body)
+	// c.hub.broadcast <- newResponse(c, request.Body)
 }
 
-func auth(c *Client, request Request) {
-	user, err := model.NewUser("sadasdssad.dd", "3")
+func registration(c *Client, request Request) {
+	var user *model.User
+	fmt.Println(request.Body)
+	err := json.Unmarshal(request.Body, &user)
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Println(user)
+	err = c.store.UserRepository.Create(user)
 	if err != nil {
 		c.hub.self <- newResponse(c, err.Error())
 		return
 	}
-	c.store.UserRepository.Create(user)
 	c.hub.self <- newResponse(c, "USER CREATE")
 }
 

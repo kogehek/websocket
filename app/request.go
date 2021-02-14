@@ -7,7 +7,7 @@ import (
 
 type Request struct {
 	Method string
-	Body   string
+	Body   json.RawMessage
 }
 
 func newRequest(JSON []byte) Request {
@@ -16,5 +16,6 @@ func newRequest(JSON []byte) Request {
 	if err != nil {
 		log.Println(err)
 	}
+
 	return request
 }
