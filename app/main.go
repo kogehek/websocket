@@ -3,6 +3,10 @@ package main
 import (
 	"log"
 	"net/http"
+
+	// "websocket/auth"
+	// "websocket/auth"
+
 	"websocket/store"
 
 	"github.com/gorilla/websocket"
@@ -30,6 +34,8 @@ func serveWs(hub *Hub, store *store.Store, w http.ResponseWriter, r *http.Reques
 }
 
 func main() {
+	// fmt.Println(auth.ExampleNewWithClaims_standardClaims())
+	// auth.Time("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiYXIiLCJuYW1lIjoiSm9obiBEb2UiLCJpYXQiOiIxNTE2MjM5MDIyIiwiZXhwIjoxNjEzNDA0MDIzLCJpc3MiOiJ0ZXN0In0.5So2-YcZHUxHZENG7Y0Hy5TzQCIqlSJ-jA0CZtaOct0")
 	store := store.New("host=localhost port=5432 dbname=websocket sslmode=disable user=root password=root")
 	defer store.DB.Close()
 

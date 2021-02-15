@@ -24,6 +24,7 @@
 }
 
 .string_messages {
+    word-wrap: break-word;
     padding: 5px;
     border-bottom: 1px #afafaf solid;
 }

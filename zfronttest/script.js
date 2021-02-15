@@ -36,3 +36,12 @@ function registration() {
     Body:{"email":email,"password": password},
   }));
 }
+
+function auth() {
+  let email = document.getElementById("email_input").value;
+  let password = document.getElementById("password_input").value;
+  socket.send(JSON.stringify({
+    Method:"auth",
+    Body:{"email":email,"password": password},
+  }));
+}
