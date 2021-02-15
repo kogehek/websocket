@@ -17,7 +17,7 @@ var Methods = map[string]interface{}{
 }
 
 func getName(c *Client, request Request) {
-	c.hub.self <- newResponse(c, c.id)
+	// c.hub.self <- newResponse(c, "Error", c.id)
 }
 
 func broadcast(c *Client, request Request) {
@@ -32,11 +32,12 @@ func auth(c *Client, request Request) {
 	}
 	user, err = c.store.UserRepository.Auth(user)
 	if err != nil {
-		c.hub.self <- newResponse(c, err.Error())
+		c.hub.self <- newResponse(c, NewErrorResponse(err.Error()))
 		return
 	}
 	token := jwt.CrateToken(user.ID)
-	c.hub.self <- newResponse(c, token)
+
+	c.hub.self <- newResponse(c, NewTokenResponse(token))
 }
 
 func registration(c *Client, request Request) {
@@ -47,10 +48,10 @@ func registration(c *Client, request Request) {
 	}
 	err = c.store.UserRepository.Create(user)
 	if err != nil {
-		c.hub.self <- newResponse(c, err.Error())
+		c.hub.self <- newResponse(c, NewErrorResponse(err.Error()))
 		return
 	}
-	c.hub.self <- newResponse(c, "USER CREATE")
+	// c.hub.self <- newResponse(c, "Error", "USER CREATE")
 }
 
 func call(funcName string, params ...interface{}) (result interface{}, err error) {

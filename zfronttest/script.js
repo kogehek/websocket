@@ -1,8 +1,14 @@
 let url = "ws://localhost:8080/ws";
 
 let socket = new WebSocket(url);
+function reconect() {
+  socket = new WebSocket(url);
+}
 
 socket.onmessage = function (event) {
+  let data = JSON.parse(event.data)
+  console.log(data)
+  console.log(event)
   let node = document.getElementById("server_messages");
   let selfMassage = document.createElement("div");
   selfMassage.classList.add("string_messages")
@@ -43,5 +49,14 @@ function auth() {
   socket.send(JSON.stringify({
     Method:"auth",
     Body:{"email":email,"password": password},
+  }));
+}
+
+function crateRoom() {
+  let room = document.getElementById("room_input").value;
+  socket.send(JSON.stringify({
+    Method:"creat_room",
+    Token:"creat_room",
+    Body:{"room":room},
   }));
 }

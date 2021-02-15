@@ -16,7 +16,7 @@
 <body>
   <div class="main">
     <div class="top_toole">
-      
+      <button onclick="reconect()">Crate Room</button>
     </div>
     <div class="connect_block">
       <div class="block_messages">
@@ -39,7 +39,13 @@
           <p></p>
           <button onclick="registration()">Registration</button>
           <button onclick="auth()">Auth</button>
-          <!-- <button>Sign up</button> -->
+        </div>
+        <div class="command_block">
+          <span>room</span>
+          <input id="room_input" type="text" maxlength="350">
+          <p></p>
+          <button onclick="crateRoom()">Crate Room</button>
+
         </div>
       </div>
     </div>
