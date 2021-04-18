@@ -3,9 +3,9 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"reflect"
-	"websocket/jwt"
 	"websocket/model"
 )
 
@@ -14,6 +14,7 @@ var Methods = map[string]interface{}{
 	"broadcast":    broadcast,
 	"registration": registration,
 	"auth":         auth,
+	"create_room":  createRoom,
 }
 
 func getName(c *Client, request Request) {
@@ -22,6 +23,22 @@ func getName(c *Client, request Request) {
 
 func broadcast(c *Client, request Request) {
 	// c.hub.broadcast <- newResponse(c, request.Body)
+}
+
+func createRoom(c *Client, request Request) {
+	var createRoomRequest createRoomRequest
+	err := json.Unmarshal(request.Body, &createRoomRequest)
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Println(createRoomRequest.Name)
+	fmt.Println(c)
+	fmt.Println(c.user)
+	// err = c.store.RoomRepository.Create(user)
+	// if err != nil {
+	// 	c.hub.self <- newResponse(c, NewErrorResponse(err.Error()))
+	// 	return
+	// }
 }
 
 func auth(c *Client, request Request) {
@@ -35,9 +52,9 @@ func auth(c *Client, request Request) {
 		c.hub.self <- newResponse(c, NewErrorResponse(err.Error()))
 		return
 	}
-	token := jwt.CrateToken(user.ID)
-
-	c.hub.self <- newResponse(c, NewTokenResponse(token))
+	fmt.Println(user)
+	c.user = user
+	c.hub.self <- newResponse(c, NewTokenResponse(user.JWT))
 }
 
 func registration(c *Client, request Request) {

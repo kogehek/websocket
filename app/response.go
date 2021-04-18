@@ -35,6 +35,7 @@ func NewErrorResponse(error string) *errorResponse {
 }
 
 func newResponse(client *Client, data interface{}) *Response {
+
 	dataJSON, err := json.Marshal(data)
 	if err != nil {
 		fmt.Println(err)

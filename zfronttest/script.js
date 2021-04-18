@@ -8,18 +8,24 @@ function reconect() {
 socket.onmessage = function (event) {
   let data = JSON.parse(event.data)
   console.log(data)
-  console.log(event)
-  let node = document.getElementById("server_messages");
-  let selfMassage = document.createElement("div");
-  selfMassage.classList.add("string_messages")
-  selfMassage.innerHTML = event.data;
-  node.insertBefore(selfMassage, node.childNodes[0]);
+  switch (data.method) {
+    case "token":
+      localStorage.setItem('token', data.token);
+      // if (localStorage.getItem("token") === null) {
+      //   //...
+      // }
+      break;
+  }
+  // let node = document.getElementById("server_messages");
+  // let selfMassage = document.createElement("div");
+  // selfMassage.classList.add("string_messages")
+  // selfMassage.innerHTML = event.data;
+  // node.insertBefore(selfMassage, node.childNodes[0]);
 };
 
 function getUID() {
   socket.send(JSON.stringify({
       Method:"getName"
-      
   }));
 }
 
@@ -53,10 +59,9 @@ function auth() {
 }
 
 function crateRoom() {
-  let room = document.getElementById("room_input").value;
+  let name = document.getElementById("room_input").value;
   socket.send(JSON.stringify({
-    Method:"creat_room",
-    Token:"creat_room",
-    Body:{"room":room},
+    Method:"create_room",
+    Body:{"name":name},
   }));
 }

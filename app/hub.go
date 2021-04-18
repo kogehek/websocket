@@ -45,7 +45,6 @@ func (h *Hub) run() {
 						delete(h.clients, client)
 					}
 				}
-
 			}
 		}
 	}

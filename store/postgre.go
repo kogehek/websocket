@@ -11,6 +11,7 @@ import (
 type Store struct {
 	DB             *sql.DB
 	UserRepository *UserRepository
+	RoomRepository *RoomRepository
 }
 
 // New create store
@@ -22,6 +23,7 @@ func New(dataBaseURL string) *Store {
 	return &Store{
 		DB:             db,
 		UserRepository: userRepository(db),
+		RoomRepository: roomRepository(db),
 	}
 }
 

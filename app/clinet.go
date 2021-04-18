@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"math/rand"
-	"os/user"
 	"time"
+	"websocket/model"
 	"websocket/store"
 
 	"github.com/gorilla/websocket"
@@ -28,7 +28,7 @@ type Client struct {
 	conn  *websocket.Conn
 	send  chan []byte
 	store *store.Store
-	user  *user.User
+	user  *model.User
 }
 
 func newClient(hub *Hub, conn *websocket.Conn, send chan []byte, store *store.Store) *Client {
