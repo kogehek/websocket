@@ -52,7 +52,7 @@ func auth(c *Client, request Request) {
 		c.hub.self <- newResponse(c, NewErrorResponse(err.Error()))
 		return
 	}
-	fmt.Println(user)
+	c.auth = true
 	c.user = user
 	c.hub.self <- newResponse(c, NewTokenResponse(user.JWT))
 }

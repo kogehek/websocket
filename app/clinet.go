@@ -29,6 +29,7 @@ type Client struct {
 	send  chan []byte
 	store *store.Store
 	user  *model.User
+	auth  bool
 }
 
 func newClient(hub *Hub, conn *websocket.Conn, send chan []byte, store *store.Store) *Client {
@@ -38,6 +39,7 @@ func newClient(hub *Hub, conn *websocket.Conn, send chan []byte, store *store.St
 		conn:  conn,
 		send:  send,
 		store: store,
+		auth:  false,
 	}
 }
 
@@ -47,6 +49,32 @@ func StringWithCharset(length int, charset string) string {
 		b[i] = charset[seededRand.Intn(len(charset))]
 	}
 	return string(b)
+}
+
+func (c *Client) starAuth() {
+	defer func() {
+		c.hub.unregister <- c
+		c.conn.Close()
+	}()
+	go func() {
+		time.Sleep(20 * time.Second)
+		if !c.auth {
+			c.hub.unregister <- c
+			c.conn.Close()
+			return
+		}
+	}()
+	for {
+		_, message, err := c.conn.ReadMessage()
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
+		fmt.Println(string(message))
+		request := newRequest(message)
+		call("auth", c, request)
+	}
 }
 
 func (c *Client) read() {
