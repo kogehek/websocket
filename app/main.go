@@ -25,7 +25,7 @@ func serveWs(hub *Hub, store *store.Store, w http.ResponseWriter, r *http.Reques
 	client := newClient(hub, conn, make(chan []byte), store)
 	client.hub.register <- client
 
-	client.starAuth()
+	// client.starAuth()
 	go client.write()
 	go client.read()
 }

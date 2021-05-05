@@ -15,6 +15,7 @@ var Methods = map[string]interface{}{
 	"registration": registration,
 	"auth":         auth,
 	"create_room":  createRoom,
+	"pos":          pos,
 }
 
 func getName(c *Client, request Request) {
@@ -23,6 +24,15 @@ func getName(c *Client, request Request) {
 
 func broadcast(c *Client, request Request) {
 	// c.hub.broadcast <- newResponse(c, request.Body)
+}
+
+func pos(c *Client, request Request) {
+	var pos *model.Pos
+	err := json.Unmarshal(request.Body, &pos)
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Print(pos)
 }
 
 func createRoom(c *Client, request Request) {
