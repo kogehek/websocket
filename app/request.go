@@ -10,21 +10,15 @@ type Request struct {
 	Body   json.RawMessage
 }
 
-type createRoomRequest struct {
-	Name string `json:"name"`
-}
-
-func NewCreateRoomRequest(name string) *createRoomRequest {
-	return &createRoomRequest{
-		Name: name,
-	}
-}
-
 func newRequest(JSON []byte) Request {
 	var request Request
 	err := json.Unmarshal(JSON, &request)
 	if err != nil {
 		log.Println(err)
+	}
+
+	if len(request.Body) == 0 {
+		request.Body = nil
 	}
 
 	return request

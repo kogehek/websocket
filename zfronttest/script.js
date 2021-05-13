@@ -58,6 +58,14 @@ function auth() {
   }));
 }
 
+function getMap() {
+  socket.send(JSON.stringify({
+    Method:"get_map"
+  }));
+}
+
+
+
 function crateRoom() {
   let name = document.getElementById("room_input").value;
   socket.send(JSON.stringify({

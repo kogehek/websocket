@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"reflect"
@@ -14,8 +13,8 @@ var Methods = map[string]interface{}{
 	"broadcast":    broadcast,
 	"registration": registration,
 	"auth":         auth,
-	"create_room":  createRoom,
-	"pos":          pos,
+
+	"get_map": getMap,
 }
 
 func getName(c *Client, request Request) {
@@ -26,29 +25,10 @@ func broadcast(c *Client, request Request) {
 	// c.hub.broadcast <- newResponse(c, request.Body)
 }
 
-func pos(c *Client, request Request) {
-	var pos *model.Pos
-	err := json.Unmarshal(request.Body, &pos)
-	if err != nil {
-		log.Println(err)
-	}
-	fmt.Print(pos)
-}
+func getMap(c *Client) {
+	gameMap := model.NewMap()
 
-func createRoom(c *Client, request Request) {
-	var createRoomRequest createRoomRequest
-	err := json.Unmarshal(request.Body, &createRoomRequest)
-	if err != nil {
-		log.Println(err)
-	}
-	fmt.Println(createRoomRequest.Name)
-	fmt.Println(c)
-	fmt.Println(c.user)
-	// err = c.store.RoomRepository.Create(user)
-	// if err != nil {
-	// 	c.hub.self <- newResponse(c, NewErrorResponse(err.Error()))
-	// 	return
-	// }
+	fmt.Println(gameMap)
 }
 
 func auth(c *Client, request Request) {
@@ -84,7 +64,7 @@ func registration(c *Client, request Request) {
 func call(funcName string, params ...interface{}) (result interface{}, err error) {
 	f := reflect.ValueOf(Methods[funcName])
 	if len(params) != f.Type().NumIn() {
-		err = errors.New("The number of params is out of index.")
+		fmt.Println("The number of params is out of index.")
 		return
 	}
 	in := make([]reflect.Value, len(params))
@@ -102,5 +82,9 @@ func call(funcName string, params ...interface{}) (result interface{}, err error
 
 func ParseJSON(JSON []byte, c *Client) {
 	request := newRequest(JSON)
-	call(request.Method, c, request)
+	if request.Body == nil {
+		call(request.Method, c)
+	} else {
+		call(request.Method, c, request)
+	}
 }
