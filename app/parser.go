@@ -26,9 +26,8 @@ func broadcast(c *Client, request Request) {
 }
 
 func getMap(c *Client) {
-	gameMap := model.NewMap()
-
-	fmt.Println(gameMap)
+	maps := model.NewMap()
+	c.hub.self <- newResponse(c, NewResponse("map", maps))
 }
 
 func auth(c *Client, request Request) {
@@ -44,7 +43,7 @@ func auth(c *Client, request Request) {
 	}
 	c.auth = true
 	c.user = user
-	c.hub.self <- newResponse(c, NewTokenResponse(user.JWT))
+	c.hub.self <- newResponse(c, NewResponse("token", user.JWT))
 }
 
 func registration(c *Client, request Request) {

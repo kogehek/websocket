@@ -10,15 +10,15 @@ type Response struct {
 	data   []byte
 }
 
-type tokenResponse struct {
-	Method string `json:"method"`
-	Token  string `json:"token"`
+type response struct {
+	Method string      `json:"method"`
+	Data   interface{} `json:"data"`
 }
 
-func NewTokenResponse(token string) *tokenResponse {
-	return &tokenResponse{
-		Method: "token",
-		Token:  token,
+func NewResponse(method string, data interface{}) *response {
+	return &response{
+		Method: method,
+		Data:   data,
 	}
 }
 
@@ -40,7 +40,7 @@ func newResponse(client *Client, data interface{}) *Response {
 	if err != nil {
 		fmt.Println(err)
 	}
-
+	fmt.Println(string(dataJSON))
 	return &Response{
 		client: client,
 		data:   dataJSON,

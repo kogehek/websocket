@@ -3,6 +3,8 @@ package model
 import (
 	"math/rand"
 
+	"time"
+
 	guuid "github.com/google/uuid"
 )
 
@@ -11,26 +13,27 @@ const xsize = 8
 const ysize = 8
 
 type Map struct {
-	Xsize int      `json:"xsize"`
-	Ysize int      `json:"ysize"`
+	Xsize int      `json:"x_size"`
+	Ysize int      `json:"y_size"`
 	UUID  string   `json:"uuid"`
 	Level int      `json:"level"`
 	Grid  [][]Cell `json:"grid"`
 }
 
-func NewMap(b Biome) *Map {
+func NewMap() *Map {
+
 	var grid [][]Cell
 
 	for i := 0; i < xsize; i++ {
+		grid = append(grid, []Cell{})
 		for j := 0; j < ysize; j++ {
-			grid[i][j] = Cell{
+			grid[i] = append(grid[i], Cell{
 				Pos: Pos{X: i, Y: j},
-			}
-			// grid = append(grid, Cell{
-			// 	Pos: Pos{X: i, Y: j},
-			// })
+			})
 		}
 	}
+	setStartPos(grid)
+	setEnemyPos(grid, 15)
 
 	return &Map{
 		Xsize: xsize,
@@ -42,11 +45,34 @@ func NewMap(b Biome) *Map {
 }
 
 func setStartPos(grid [][]Cell) {
-	x := rand.Intn(xsize-0) + 0
-	y := 0
-	if x != 0 {
-		y = rand.Intn(ysize-0) + 0
+	rand.Seed(time.Now().UnixNano())
+	var edge bool = rand.Intn(2) == 0
+	x := 0
+	y := rand.Intn(ysize)
+	if edge {
+		x = rand.Intn(xsize)
+		y = 0
 	}
-	grid[x][y].Start = Pos{X: x, Y: y}
-	// return Pos{X: x, Y: y}
+	grid[x][y].Start = true
+}
+
+func setEnemyPos(grid [][]Cell, count int) {
+
+	for i := 0; i < count; i++ {
+		rand.Seed(time.Now().UnixNano() + int64(i))
+		pos := free(grid, int64(count))
+		grid[pos.X][pos.Y].Enemy = Enemys[rand.Intn(len(Enemys))]
+	}
+}
+
+func free(grid [][]Cell, seed int64) Pos {
+	randx := rand.Intn(xsize)
+	randy := rand.Intn(ysize)
+
+	if !grid[randx][randy].IsFree() {
+		rand.Seed(seed)
+		free(grid, seed+1)
+	}
+
+	return Pos{X: randx, Y: randy}
 }

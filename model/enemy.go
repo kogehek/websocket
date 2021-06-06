@@ -6,20 +6,20 @@ import (
 )
 
 type Enemy struct {
-	name   string
-	atack  int
-	health int
+	Name   string `json:"name"`
+	Atack  int    `json:"atack"`
+	Health int    `json:"health"`
 }
 
 var Enemys []Enemy = []Enemy{
 	{
-		name: "skeleton", atack: 1, health: 2,
+		Name: "skeleton", Atack: 1, Health: 2,
 	},
 	{
-		name: "mole", atack: 3, health: 1,
+		Name: "mole", Atack: 3, Health: 1,
 	},
 	{
-		name: "vampire", atack: 2, health: 4,
+		Name: "vampire", Atack: 2, Health: 4,
 	},
 }
 

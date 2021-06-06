@@ -90,7 +90,8 @@ func (c *Client) read() {
 			break
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		newMessage(message, c)
+		// newMessage(message, c)
+		fmt.Print(message)
 		ParseJSON(message, c)
 	}
 }
