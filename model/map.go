@@ -57,7 +57,6 @@ func setStartPos(grid [][]Cell) {
 }
 
 func setEnemyPos(grid [][]Cell, count int) {
-
 	for i := 0; i < count; i++ {
 		rand.Seed(time.Now().UnixNano() + int64(i))
 		pos := free(grid, int64(count))
