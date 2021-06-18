@@ -1,4 +1,4 @@
-package main
+package socket
 
 import (
 	"encoding/json"
@@ -10,31 +10,31 @@ type Response struct {
 	data   []byte
 }
 
-type response struct {
+type DataResponse struct {
 	Method string      `json:"method"`
 	Data   interface{} `json:"data"`
 }
 
-func NewResponse(method string, data interface{}) *response {
-	return &response{
+func NewDataResponse(method string, data interface{}) *DataResponse {
+	return &DataResponse{
 		Method: method,
 		Data:   data,
 	}
 }
 
-type errorResponse struct {
+type ErrorResponse struct {
 	Method string `json:"method"`
 	Error  string `json:"error"`
 }
 
-func NewErrorResponse(error string) *errorResponse {
-	return &errorResponse{
+func NewErrorResponse(error string) *ErrorResponse {
+	return &ErrorResponse{
 		Method: "error",
 		Error:  error,
 	}
 }
 
-func newResponse(client *Client, data interface{}) *Response {
+func NewResponse(client *Client, data interface{}) *Response {
 
 	dataJSON, err := json.Marshal(data)
 	if err != nil {

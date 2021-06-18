@@ -1,27 +1,27 @@
-package main
+package socket
 
 type Hub struct {
 	broadcast  chan *Response
 	self       chan *Response
-	register   chan *Client
+	Register   chan *Client
 	unregister chan *Client
 	clients    map[*Client]bool
 }
 
-func newHub() *Hub {
+func NewHub() *Hub {
 	return &Hub{
 		broadcast:  make(chan *Response),
 		self:       make(chan *Response),
-		register:   make(chan *Client),
+		Register:   make(chan *Client),
 		unregister: make(chan *Client),
 		clients:    make(map[*Client]bool),
 	}
 }
 
-func (h *Hub) run() {
+func (h *Hub) Run() {
 	for {
 		select {
-		case client := <-h.register:
+		case client := <-h.Register:
 			h.clients[client] = true
 		case client := <-h.unregister:
 			if _, ok := h.clients[client]; ok {

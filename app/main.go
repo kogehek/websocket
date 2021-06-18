@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"websocket/socket"
 	"websocket/store"
 
 	"github.com/gorilla/websocket"
@@ -13,7 +14,7 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-func serveWs(hub *Hub, store *store.Store, w http.ResponseWriter, r *http.Request) {
+func serveWs(hub *socket.Hub, store *store.Store, w http.ResponseWriter, r *http.Request) {
 	upgrader.CheckOrigin = func(r *http.Request) bool {
 		return true
 	}
@@ -22,20 +23,20 @@ func serveWs(hub *Hub, store *store.Store, w http.ResponseWriter, r *http.Reques
 		log.Println(err)
 		return
 	}
-	client := newClient(hub, conn, make(chan []byte), store)
-	client.hub.register <- client
+	client := socket.NewClient(hub, conn, make(chan []byte), store)
+	client.Hub.Register <- client
 
 	// client.starAuth()
-	go client.write()
-	go client.read()
+	go client.Write()
+	go client.Read()
 }
 
 func main() {
 	store := store.New("host=localhost port=5432 dbname=websocket sslmode=disable user=root password=root")
 	defer store.DB.Close()
 
-	hub := newHub()
-	go hub.run()
+	hub := socket.NewHub()
+	go hub.Run()
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, store, w, r)
 	})

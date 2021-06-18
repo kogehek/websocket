@@ -1,4 +1,4 @@
-package main
+package socket
 
 import (
 	"bytes"
@@ -24,7 +24,7 @@ var seededRand *rand.Rand = rand.New(
 
 type Client struct {
 	id    string
-	hub   *Hub
+	Hub   *Hub
 	conn  *websocket.Conn
 	send  chan []byte
 	store *store.Store
@@ -32,10 +32,10 @@ type Client struct {
 	auth  bool
 }
 
-func newClient(hub *Hub, conn *websocket.Conn, send chan []byte, store *store.Store) *Client {
+func NewClient(hub *Hub, conn *websocket.Conn, send chan []byte, store *store.Store) *Client {
 	return &Client{
 		id:    StringWithCharset(5, charset),
-		hub:   hub,
+		Hub:   hub,
 		conn:  conn,
 		send:  send,
 		store: store,
@@ -53,13 +53,13 @@ func StringWithCharset(length int, charset string) string {
 
 func (c *Client) starAuth() {
 	defer func() {
-		c.hub.unregister <- c
+		c.Hub.unregister <- c
 		c.conn.Close()
 	}()
 	go func() {
 		time.Sleep(20 * time.Second)
 		if !c.auth {
-			c.hub.unregister <- c
+			c.Hub.unregister <- c
 			c.conn.Close()
 			return
 		}
@@ -77,9 +77,9 @@ func (c *Client) starAuth() {
 	}
 }
 
-func (c *Client) read() {
+func (c *Client) Read() {
 	defer func() {
-		c.hub.unregister <- c
+		c.Hub.unregister <- c
 		c.conn.Close()
 	}()
 
@@ -96,9 +96,9 @@ func (c *Client) read() {
 	}
 }
 
-func (c *Client) write() {
+func (c *Client) Write() {
 	defer func() {
-		c.hub.unregister <- c
+		c.Hub.unregister <- c
 		c.conn.Close()
 	}()
 	for {

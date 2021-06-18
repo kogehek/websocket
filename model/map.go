@@ -2,10 +2,7 @@ package model
 
 import (
 	"math/rand"
-
 	"time"
-
-	guuid "github.com/google/uuid"
 )
 
 // min 4x4
@@ -15,7 +12,6 @@ const ysize = 8
 type Map struct {
 	Xsize int      `json:"x_size"`
 	Ysize int      `json:"y_size"`
-	UUID  string   `json:"uuid"`
 	Level int      `json:"level"`
 	Grid  [][]Cell `json:"grid"`
 }
@@ -38,7 +34,6 @@ func NewMap() *Map {
 	return &Map{
 		Xsize: xsize,
 		Ysize: ysize,
-		UUID:  guuid.New().String(),
 		Level: 1,
 		Grid:  grid,
 	}

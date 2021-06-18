@@ -1,4 +1,4 @@
-package main
+package socket
 
 import (
 	"encoding/json"
@@ -9,16 +9,16 @@ import (
 )
 
 var Methods = map[string]interface{}{
-	"getName":      getName,
 	"broadcast":    broadcast,
 	"registration": registration,
 	"auth":         auth,
-
-	"get_map": getMap,
+	"get_map":      getMap,
+	"new_game":     newGame,
 }
 
-func getName(c *Client, request Request) {
-	// c.hub.self <- newResponse(c, "Error", c.id)
+func newGame(c *Client) {
+	maps := model.NewMap()
+	c.Hub.self <- NewResponse(c, NewDataResponse("map", maps))
 }
 
 func broadcast(c *Client, request Request) {
@@ -27,7 +27,7 @@ func broadcast(c *Client, request Request) {
 
 func getMap(c *Client) {
 	maps := model.NewMap()
-	c.hub.self <- newResponse(c, NewResponse("map", maps))
+	c.Hub.self <- NewResponse(c, NewDataResponse("map", maps))
 }
 
 func auth(c *Client, request Request) {
@@ -38,12 +38,12 @@ func auth(c *Client, request Request) {
 	}
 	user, err = c.store.UserRepository.Auth(user)
 	if err != nil {
-		c.hub.self <- newResponse(c, NewErrorResponse(err.Error()))
+		c.Hub.self <- NewResponse(c, NewErrorResponse(err.Error()))
 		return
 	}
 	c.auth = true
 	c.user = user
-	c.hub.self <- newResponse(c, NewResponse("token", user.JWT))
+	c.Hub.self <- NewResponse(c, NewDataResponse("token", user.JWT))
 }
 
 func registration(c *Client, request Request) {
@@ -54,7 +54,7 @@ func registration(c *Client, request Request) {
 	}
 	err = c.store.UserRepository.Create(user)
 	if err != nil {
-		c.hub.self <- newResponse(c, NewErrorResponse(err.Error()))
+		c.Hub.self <- NewResponse(c, NewErrorResponse(err.Error()))
 		return
 	}
 	// c.hub.self <- newResponse(c, "Error", "USER CREATE")
